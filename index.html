@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventario de ventas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="brand-logo">
+      <h3>Inventario</h3>
+      <p>VENTAS</p>
+    </div>
+    <nav class="nav flex-column mt-3">
+      <a class="nav-link active" href="#dashboard" onclick="showSection('dashboard')"><i class="fas fa-tachometer-alt"></i> Panel</a>
+      <a class="nav-link" href="#products" onclick="showSection('products')"><i class="fas fa-tshirt"></i> Productos</a>
+      <a class="nav-link" href="#sales" onclick="showSection('sales')"><i class="fas fa-shopping-cart"></i> Ventas</a>
+      <a class="nav-link" href="#installments" onclick="showSection('installments')"><i class="fas fa-credit-card"></i> Cuotas</a>
+      <a class="nav-link" href="#analytics" onclick="showSection('analytics')"><i class="fas fa-chart-line"></i> Análisis</a>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="section">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <div>
+          <h2 class="mb-1">Panel de Control</h2>
+          <p class="text-muted mb-0">Bienvenido a tu tienda</p>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-12 col-md-3">
+          <div class="stat-box">
+            <h6><i class="fas fa-box"></i> Total Productos</h6>
+            <h4 id="totalProducts">0</h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="stat-box">
+            <h6><i class="fas fa-dollar-sign"></i> Ventas Totales</h6>
+            <h4 id="totalSalesAmount">$0</h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="stat-box">
+            <h6><i class="fas fa-chart-line"></i> Ganancia Total</h6>
+            <h4 id="totalProfit" style="color: #10b981;">$0</h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="stat-box">
+            <h6><i class="fas fa-shopping-bag"></i> Artículos Vendidos</h6>
+            <h4 id="productsSold">0</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-12">
+          <button class="btn btn-success btn-lg w-100" onclick="openSellModal()">
+            <i class="fas fa-shopping-cart"></i> Vender Producto
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products Section -->
+    <div id="products" class="section" style="display: none;">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <div>
+          <h2 class="mb-1">Productos</h2>
+          <p class="text-muted mb-0">Gestiona tu inventario</p>
+        </div>
+        <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#addProductModal">
+          <i class="fas fa-plus"></i> Agregar Producto
+        </button>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-12 col-md-6">
+          <div class="stat-box">
+            <h6><i class="fas fa-shopping-bag"></i> Total Productos</h6>
+            <h4 id="totalProductsCount">0</h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="stat-box">
+            <h6><i class="fas fa-money-bill"></i> Monto Gastado</h6>
+            <h4 id="totalMoneySpent" style="color: #ef4444;">$0</h4>
+          </div>
+        </div>
+      </div>
+
+      <div id="productsTable" class="row"></div>
+    </div>
+
+    <!-- Sales Section -->
+    <div id="sales" class="section" style="display: none;">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <div>
+          <h2 class="mb-1">Ventas</h2>
+          <p class="text-muted mb-0">Rastrear tus ventas</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-lg-8">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0"><i class="fas fa-cash-register"></i> Caja Registradora</h5>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <h6>Ingresos Totales</h6>
+                    <h4 id="totalRevenue">$0</h4>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <h6>Costo Total</h6>
+                    <h4 id="totalCost">$0</h4>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <h6>Ganancia Total</h6>
+                    <h4 id="totalProfitSales" style="color: #10b981;">$0</h4>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <h6>Productos Vendidos</h6>
+                    <h4 id="totalProductsSoldSales">0</h4>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card mt-4">
+                <div class="card-header">
+                  <h5 class="mb-0"><i class="fas fa-receipt"></i> Registro de Ventas</h5>
+                </div>
+                <div class="card-body">
+                  <div id="salesContainer" class="row"></div>
+                  <nav aria-label="Sales pagination" class="mt-4">
+                    <ul class="pagination justify-content-center mb-0" id="salesPagination"></ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Installments Section -->
+    <div id="installments" class="section" style="display: none;">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <div>
+          <h2 class="mb-1">Cuotas</h2>
+          <p class="text-muted mb-0">Gestiona los pagos en cuotas</p>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-12 col-md-3">
+          <div class="stat-box">
+            <h6><i class="fas fa-list"></i> Total Cuotas</h6>
+            <h4 id="totalInstallments">0</h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="stat-box">
+            <h6><i class="fas fa-money-bill"></i> Pagado</h6>
+            <h4 id="totalPaid">$0</h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="stat-box">
+            <h6><i class="fas fa-hourglass-half"></i> Por Pagar</h6>
+            <h4 id="totalPending">$0</h4>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="stat-box">
+            <h6><i class="fas fa-percent"></i> % Pagado</h6>
+            <h4 id="percentagePaid">0%</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0"><i class="fas fa-table"></i> Registro de Cuotas</h5>
+            </div>
+            <div class="card-body">
+              <div id="installmentsContainer" class="row"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics Section -->
+    <div id="analytics" class="section" style="display: none;">
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <div>
+          <h2 class="mb-1">Distribución de Ventas</h2>
+          <p class="text-muted mb-0">Desglose de ingresos por porcentaje</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light border-bottom">
+              <h5 class="mb-0"><i class="fas fa-table"></i> Detalle de Ventas</h5>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Cliente</th>
+                      <th>Ingresos</th>
+                      <th>40%</th>
+                      <th>30%</th>
+                      <th>20%</th>
+                      <th>10%</th>
+                      <th>Fecha</th>
+                    </tr>
+                  </thead>
+                  <tbody id="analyticsTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Product Modal -->
+  <div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-gradient border-0">
+          <h5 class="modal-title fw-bold"><i class="fas fa-plus-circle me-2"></i>Agregar Nuevo Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addProductForm">
+            <div class="mb-3">
+              <label class="form-label fw-bold"><i class="fas fa-tag me-2"></i>Nombre del Producto *</label>
+              <input type="text" class="form-control form-control-lg" id="productName" placeholder="Ej: Conjunto Rojo" required>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label fw-bold"><i class="fas fa-boxes me-2"></i>Cantidad *</label>
+                  <input type="number" class="form-control form-control-lg" id="productQuantity" min="0" placeholder="0" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label fw-bold"><i class="fas fa-calendar me-2"></i>Fecha de Compra *</label>
+                  <input type="date" class="form-control form-control-lg" id="purchaseDate" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label fw-bold"><i class="fas fa-arrow-down me-2"></i>Precio de Compra (CLP) *</label>
+                  <input type="number" step="1" class="form-control form-control-lg" id="productBuyPrice" min="1" placeholder="0" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label fw-bold"><i class="fas fa-arrow-up me-2"></i>Precio de Venta (CLP) *</label>
+                  <input type="number" step="1" class="form-control form-control-lg" id="productSellPrice" min="1" placeholder="0" required>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold"><i class="fas fa-list me-2"></i>Categoría *</label>
+              <div class="input-group">
+                <select class="form-select form-select-lg" id="productCategory" required>
+                  <option value="">Seleccionar categoría...</option>
+                  <option value="tops">Tops</option>
+                  <option value="bottoms">Bottoms</option>
+                  <option value="dresses">Vestidos</option>
+                  <option value="shoes">Zapatos</option>
+                  <option value="accessories">Accesorios</option>
+                </select>
+                <button class="btn btn-outline-primary" type="button" id="customCategoryBtn" onclick="toggleCustomCategory()">
+                  <i class="fas fa-plus"></i> Personalizar
+                </button>
+              </div>
+              <input type="text" class="form-control form-control-lg mt-2" id="customCategoryInput" placeholder="Escribe categoría personalizada..." style="display: none;">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer border-0 bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success btn-lg" onclick="addProduct()">
+            <i class="fas fa-check me-2"></i>Guardar Producto
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sell Product Modal -->
+  <div class="modal fade" id="sellProductModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-gradient border-0">
+          <h5 class="modal-title fw-bold"><i class="fas fa-shopping-cart me-2"></i>Nueva Venta</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-4">
+            <label class="form-label fw-bold mb-3"><i class="fas fa-box me-2"></i>Selecciona Productos</label>
+            <div id="productsSelectionContainer" class="border-0 rounded p-3 bg-light" style="max-height: 300px; overflow-y: auto;">
+            </div>
+            <button type="button" class="btn btn-sm btn-primary mt-3" onclick="addProductRow()">
+              <i class="fas fa-plus me-2"></i>Agregar Producto
+            </button>
+          </div>
+
+          <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-header bg-primary text-white border-0">
+              <h6 class="mb-0"><i class="fas fa-list me-2"></i>Resumen de Productos</h6>
+            </div>
+            <div class="card-body">
+              <div id="selectedProductsSummary" class="table-responsive">
+                <table class="table table-sm mb-0">
+                  <thead>
+                    <tr class="table-light">
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                      <th>Precio</th>
+                      <th>Subtotal</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="selectedProductsTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <label class="form-label fw-bold mb-3"><i class="fas fa-credit-card me-2"></i>Tipo de Pago</label>
+            <div class="btn-group w-100" role="group">
+              <input type="radio" class="btn-check" name="paymentType" id="paymentFull" value="full" checked onchange="toggleInstallments()">
+              <label class="btn btn-outline-primary" for="paymentFull">
+                <i class="fas fa-check-circle me-2"></i>Pago Completo
+              </label>
+              
+              <input type="radio" class="btn-check" name="paymentType" id="paymentInstallments" value="installments" onchange="toggleInstallments()">
+              <label class="btn btn-outline-primary" for="paymentInstallments">
+                <i class="fas fa-calendar-alt me-2"></i>Pago en Cuotas
+              </label>
+            </div>
+          </div>
+
+          <div id="installmentDetails" style="display: none;" class="mb-4 p-3 bg-light rounded">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Número de Cuotas</label>
+              <input type="number" class="form-control" id="numberOfInstallments" min="2" max="12" value="3" onchange="updateSaleTotal()" oninput="updateSaleTotal()">
+            </div>
+            <div class="mb-0">
+              <label class="form-label fw-bold">Nombre del Cliente</label>
+              <input type="text" class="form-control" id="clientName" placeholder="Ingresa el nombre del cliente">
+            </div>
+          </div>
+
+          <div id="directSalesClientName" class="mb-4">
+            <label class="form-label fw-bold">Nombre del Cliente *</label>
+            <input type="text" class="form-control" id="directClientName" placeholder="Ingresa el nombre del cliente">
+          </div>
+
+          <div class="card border-0 shadow-sm bg-gradient">
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-6">
+                  <small class="text-muted d-block mb-1">Ingresos</small>
+                  <h5 class="text-success mb-0"><i class="fas fa-dollar-sign me-1"></i><span id="saleRevenue">0</span></h5>
+                </div>
+                <div class="col-6">
+                  <small class="text-muted d-block mb-1">Ganancia</small>
+                  <h5 class="text-success mb-0"><i class="fas fa-chart-line me-1"></i><span id="saleProfit">0</span></h5>
+                </div>
+              </div>
+              <div id="installmentInfo" style="display: none;" class="border-top pt-3">
+                <div class="row">
+                  <div class="col-6">
+                    <small class="text-muted d-block mb-1">Monto por Cuota</small>
+                    <p class="mb-0 fw-bold">$<span id="installmentAmount">0</span></p>
+                  </div>
+                  <div class="col-6">
+                    <small class="text-muted d-block mb-1">Total Cuotas</small>
+                    <p class="mb-0 fw-bold"><span id="totalInstallmentCount">0</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-0 bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success btn-lg" onclick="sellProducts()">
+            <i class="fas fa-check me-2"></i>Completar Venta
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sale Detail Modal -->
+  <div class="modal fade" id="saleDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-gradient border-0">
+          <h5 class="modal-title fw-bold"><i class="fas fa-receipt me-2"></i>Detalle de Venta</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-4">
+            <h6 class="text-muted mb-2"><i class="fas fa-hashtag me-2"></i>ID Venta</h6>
+            <p class="mb-0 fw-bold text-primary" id="detailSaleId">-</p>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="text-primary mb-3"><i class="fas fa-user me-2"></i>Cliente</h6>
+            <p class="mb-0 fw-bold" id="detailClientName">-</p>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="text-primary mb-3"><i class="fas fa-box me-2"></i>Productos</h6>
+            <div id="detailProducts" class="border-start border-3 border-primary ps-3">
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-6">
+              <h6 class="text-muted mb-2">Ingresos</h6>
+              <p class="mb-0 fw-bold text-success fs-5">$<span id="detailRevenue">0</span></p>
+            </div>
+            <div class="col-6">
+              <h6 class="text-muted mb-2">Tipo de Pago</h6>
+              <p class="mb-0"><span class="badge" id="detailPaymentType">-</span></p>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-6">
+              <h6 class="text-muted mb-2">Estado</h6>
+              <p class="mb-0"><span class="badge" id="detailStatus">-</span></p>
+            </div>
+            <div class="col-6">
+              <h6 class="text-muted mb-2">Fecha</h6>
+              <p class="mb-0 small" id="detailDate">-</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-0 bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+  <script src="installments.js"></script>
+</body>
+</html>
