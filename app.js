@@ -162,11 +162,22 @@ function openSellModal() {
 function updateProductSelection() {
   const container = document.getElementById('productsSelectionContainer');
   
-  const html = products.map((product, index) => `
-    <div class="mb-2 p-2 bg-white rounded">
-      <small>${product.name} - Stock: ${product.quantity}</small>
+  if (products.length === 0) {
+    container.innerHTML = '<p class="text-muted">No hay productos disponibles</p>';
+    return;
+  }
+
+  const html = `
+    <div class="mb-3">
+      <label class="form-label fw-bold">Selecciona un producto:</label>
+      <select class="form-select" id="quickProductSelect" onchange="addProductRowQuick()">
+        <option value="">-- Seleccionar producto --</option>
+        ${products.map(p => `<option value="${p.productId}">
+          ${p.name} (Stock: ${p.quantity})
+        </option>`).join('')}
+      </select>
     </div>
-  `).join('');
+  `;
 
   container.innerHTML = html;
 }
@@ -191,6 +202,41 @@ function addProductRow() {
   `;
   
   table.appendChild(row);
+}
+
+function addProductRowQuick() {
+  const select = document.getElementById('quickProductSelect');
+  const productId = select.value;
+  
+  if (!productId) return;
+  
+  const product = products.find(p => p.productId == productId);
+  if (!product) return;
+  
+  // Agregar fila a tabla
+  const table = document.getElementById('selectedProductsTable');
+  const row = document.createElement('tr');
+  
+  const productSelect = products.map(p => `<option value="${p.productId}" ${p.productId == productId ? 'selected' : ''}>${p.name}</option>`).join('');
+  
+  row.innerHTML = `
+    <td>
+      <select class="form-select form-select-sm" onchange="updateSaleTotal()">
+        <option value="">Seleccionar...</option>
+        ${productSelect}
+      </select>
+    </td>
+    <td><input type="number" class="form-control form-control-sm" min="1" value="1" onchange="updateSaleTotal()" oninput="updateSaleTotal()"></td>
+    <td><input type="number" class="form-control form-control-sm" min="1" value="${product.sellPrice}" onchange="updateSaleTotal()" oninput="updateSaleTotal()"></td>
+    <td><span>$0</span></td>
+    <td><button class="btn btn-sm btn-danger" onclick="this.parentElement.parentElement.remove(); updateSaleTotal()">X</button></td>
+  `;
+  
+  table.appendChild(row);
+  
+  // Reset select
+  select.value = '';
+  updateSaleTotal();
 }
 
 function updateSaleTotal() {
